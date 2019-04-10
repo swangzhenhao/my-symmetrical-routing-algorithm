@@ -33,40 +33,57 @@ public class RoutingAlgorithm {
 
     public static void MyRouter(){
         //初始化数据
-        int layerNum = 2;
-        int netsNum = 20;
+        int layerNum = 4;
+        int netsNum = 10;
 //int obstaclesNum = 19;
-        int gridXmax = 120;
-        int gridYmax = 120;//初始化数据
+        int gridXmax = 15;
+        int gridYmax = 10;//初始化数据
         int sum = 0;
         GraphModel graphModel[] = new GraphModel[layerNum];
         for(int i =0;i<layerNum;i++){
             graphModel[i] = new GraphModel(gridXmax,gridYmax);
         }
+/*for(int k =0;k<layerNum;k++){//在各层随机生成障碍
+    for(int i = 0;i<gridXmax;i++){
+        for(int j = 0;j<gridYmax;j++) {
+        double res = Math.random();
+            if(res>0.05){
+                graphModel[k].graph[i][j] = 0;
+            }
+            else{
+                graphModel[k].graph[i][j] = 1;
+            }
+            //graphModel[0].graph[i][j] = 0;
+            sum = sum + graphModel[k].graph[i][j];
+        }
+    }
+}*/
         for(int i = 0;i<gridXmax;i++){
             for(int j = 0;j<gridYmax;j++) {
-                //double res = Math.random();
-        /*if(j == 5){
-            graphModel[0].graph[i][j] = 1;
-       }
-        else{
+        /*double res = Math.random();
+        if(res>0.05){
             graphModel[0].graph[i][j] = 0;
+        }
+        else{
+            graphModel[0].graph[i][j] = 1;
         }*/
                 graphModel[0].graph[i][j] = 0;
                 sum = sum + graphModel[0].graph[i][j];
             }
         }
+
         Coordinate sources[] = new Coordinate[netsNum];//起点定义
-        for(int i= 0; i<netsNum;i++){
-            if(i<10){
-                sources[i] = new Coordinate(0,119-3*i,gridXmax,gridYmax);
-            }
-            else{
-                sources[i] = new Coordinate(119,119-3*(i-10),gridXmax,gridYmax);
-            }
-        }
-/*sources[0] =new Coordinate(0,2,gridXmax,gridYmax);
-sources[1] =new Coordinate(5,2,gridXmax,gridYmax);*/
+
+        sources[0] =new Coordinate(0,1,gridXmax,gridYmax);
+        sources[1] =new Coordinate(0,3,gridXmax,gridYmax);
+        sources[2] =new Coordinate(0,5,gridXmax,gridYmax);
+        sources[3] =new Coordinate(0,7,gridXmax,gridYmax);
+        sources[4] =new Coordinate(0,9,gridXmax,gridYmax);
+        sources[5] =new Coordinate(14,1,gridXmax,gridYmax);
+        sources[6] =new Coordinate(14,3,gridXmax,gridYmax);
+        sources[7] =new Coordinate(14,5,gridXmax,gridYmax);
+        sources[8] =new Coordinate(14,7,gridXmax,gridYmax);
+        sources[9] =new Coordinate(14,9,gridXmax,gridYmax);
 /*sources[2] =new Coordinate(0,7,gridXmax,gridYmax);
 sources[3] =new Coordinate(10,7,gridXmax,gridYmax);*/
         for(int i = 0; i<sources.length;i++){
@@ -74,16 +91,16 @@ sources[3] =new Coordinate(10,7,gridXmax,gridYmax);*/
         }
 //初始化，后续更改为更灵活的方式
         Coordinate sinks[] = new Coordinate[netsNum];//终点定义
-        for(int i= 0; i<netsNum;i++){
-            if(i<10){
-                sinks[i] = new Coordinate(119,30-3*i,gridXmax,gridYmax);
-            }
-            else{
-                sinks[i] = new Coordinate(0,30-3*(i-10),gridXmax,gridYmax);
-            }
-        }
-/*sinks[0] =new Coordinate(2,0,gridXmax,gridYmax);
-sinks[1] =new Coordinate(3,0,gridXmax,gridYmax);*/
+        sinks[0] =new Coordinate(14,6,gridXmax,gridYmax);
+        sinks[1] =new Coordinate(14,8,gridXmax,gridYmax);
+        sinks[2] =new Coordinate(10,0,gridXmax,gridYmax);
+        sinks[3] =new Coordinate(11,0,gridXmax,gridYmax);
+        sinks[4] =new Coordinate(12,0,gridXmax,gridYmax);
+        sinks[5] =new Coordinate(0,6,gridXmax,gridYmax);
+        sinks[6] =new Coordinate(0,8,gridXmax,gridYmax);
+        sinks[7] =new Coordinate(4,0,gridXmax,gridYmax);
+        sinks[8] =new Coordinate(3,0,gridXmax,gridYmax);
+        sinks[9] =new Coordinate(2,0,gridXmax,gridYmax);
 /*sinks[2] =new Coordinate(10,1,gridXmax,gridYmax);
 sinks[3] =new Coordinate(0,1,gridXmax,gridYmax);*/
 
@@ -107,16 +124,16 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
             path[i].routingPath.add(temp);
         }
 //初始化
-        SymmetricNets syNetPairs[] = new SymmetricNets[10];
-        for(int i =0;i<10;i++){
-            syNetPairs[i] = new SymmetricNets(i,i+10);
-        }
-//syNetPairs[0] = new SymmetricNets(0,10);//对称nets定义
-//syNetPairs[1] = new SymmetricNets(0,1);
+        SymmetricNets syNetPairs[] = new SymmetricNets[5];
+        syNetPairs[0] = new SymmetricNets(0,5);//对称nets定义
+        syNetPairs[1] = new SymmetricNets(1,6);
+        syNetPairs[2] = new SymmetricNets(2,7);
+        syNetPairs[3] = new SymmetricNets(3,8);
+        syNetPairs[4] = new SymmetricNets(4,9);
 //System.out.println(syNetPairs1.isIntersected());//判断是否有intersection
 //System.out.println(syNetPairs2.isIntersected());
-        int sourcesOrder[] = {9,8,7,6,5,4,3,2,1,0,10,11,12,13,14,15,16,17,18,19};//依次为y轴，x轴，x值最大那条线上的点，y值最大那条线上的点(不一定，总之环绕图边一周），如何用程序转换后续解决，考虑在Coordinate里增加一个参数记录其标号
-        int sinksOrder[] = {10,11,12,13,14,15,16,17,18,19,9,8,7,6,5,4,3,2,1,0};
+        int sourcesOrder[] = {0,1,2,3,4,9,8,7,6,5};//依次为y轴，x轴，x值最大那条线上的点，y值最大那条线上的点(不一定，总之环绕图边一周），如何用程序转换后续解决，考虑在Coordinate里增加一个参数记录其标号
+        int sinksOrder[] = {6,5,9,8,7,2,3,4,0,1};
 
 
         int lcs[][] = new int[netsNum][netsNum];//用于分层，后续修改为更灵活方式
@@ -210,15 +227,15 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
             //检测这一组nets适合放在哪一层，即分层操作
             for(int j = 0;j<layerNum;j++){
                if(!graphModel[j].isAssigned){
-                   /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[j].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                   MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[j].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
                    int tempMax = maximumTest.maxFlow();
-                   if(tempMax == netsNumOfLayers[i]){//data2在所有最大流部分都要处理，*/
+                   if(tempMax == netsNumOfLayers[i]){//data2在所有最大流部分都要处理，
                        graphModel[j].isAssigned = true;
                        for(int k = 0;k<netsNumOfLayers[i];k++){
                            path[assignment[i][k]].layer = j;//标记路径在哪个layer
                        }
                        break;
-                   /*}*/
+                   }
                }
             }
             for(int j=0;j<netsNumOfLayers[i];j++){
@@ -241,8 +258,8 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                             for(int l = 0;l<syNetPairs[k].routingPath2.size();l++){
                                 Coordinate temp = new Coordinate(((gridXmax-1) -syNetPairs[k].routingPath2.get(l).x)+xOffset,
                                         syNetPairs[k].routingPath2.get(l).y+yOffset, gridXmax,gridYmax);//关于坐标系的中轴线对称
-                                /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                int tempMax = maximumTest.maxFlow();*/
+                                MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                int tempMax = maximumTest.maxFlow();
                                 if(l == 0){
                                     path[assignment[i][j]].routingPath.add(temp);
                                 }
@@ -439,8 +456,8 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                 Coordinate temp = new Coordinate(((gridXmax-1) -syNetPairs[k].routingPath1.get(l).x),syNetPairs[k].routingPath1.get(l).y,
                                         gridXmax,gridYmax);//关于坐标系的中轴线对称
                                 frontiers[j] = temp;
-                                /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                int tempMax = maximumTest.maxFlow();*/
+                                MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                int tempMax = maximumTest.maxFlow();
                                 if(l==0){
                                     path[assignment[i][j]].routingPath.add(temp);
                                 }
@@ -557,19 +574,19 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                 graphModel[lay].graph[(frontiers[j].x - 1)][frontiers[j].y] = 1;
                                 frontiers[j].x = frontiers[j].x - 1;
                                 frontiers[j].updateSN();
-                                /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                int tempMax = maximumTest.maxFlow();*/
+                                MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                int tempMax = maximumTest.maxFlow();
                                 frontiers[j].x = frontiers[j].x + 1;
                                 frontiers[j].updateSN();
                                 graphModel[lay].graph[(frontiers[j].x - 1)][frontiers[j].y] = tempGpValue;
                                 sum -= 1;
-                                /*if(tempMax >= netsNumOfLayers[i]) {*/
+                                if(tempMax >= netsNumOfLayers[i]) {
                                     tempDistanceW = Math.abs(tempSinks[j].x - (frontiers[j].x - 1)) + Math.abs(tempSinks[j].y - frontiers[j].y);
                                     if (tempDistanceO > tempDistanceW) {
                                         //orientation = 1;
                                         tempDistance[0] = tempDistanceW;//调整了，记得修改
                                     }
-                                /*}*/
+                                }
 
                             }
                         }
@@ -585,19 +602,19 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                 graphModel[lay].graph[(frontiers[j].x + 1)][frontiers[j].y] = 1;
                                 frontiers[j].x = frontiers[j].x + 1;
                                 frontiers[j].updateSN();
-                                /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                int tempMax = maximumTest.maxFlow();*/
+                                MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                int tempMax = maximumTest.maxFlow();
                                 frontiers[j].x = frontiers[j].x - 1;
                                 frontiers[j].updateSN();
                                 graphModel[lay].graph[(frontiers[j].x + 1)][frontiers[j].y] = tempGpValue;
                                 sum -= 1;
-                                /*if(tempMax >= netsNumOfLayers[i]) {*/
+                                if(tempMax >= netsNumOfLayers[i]) {
                                     tempDistanceE = Math.abs(tempSinks[j].x - (frontiers[j].x + 1)) + Math.abs(tempSinks[j].y - frontiers[j].y);
                                     if (tempDistanceO > tempDistanceE) {
                                         //orientation = 2;
                                         tempDistance[1] = tempDistanceE;
                                     }
-                                /*}*/
+                                }
 
                             }
                         }
@@ -613,20 +630,20 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                 graphModel[lay].graph[frontiers[j].x][(frontiers[j].y-1)] = 1;
                                 frontiers[j].y = frontiers[j].y - 1;
                                 frontiers[j].updateSN();
-                                /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                int tempMax = maximumTest.maxFlow();*/
+                                MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                int tempMax = maximumTest.maxFlow();
                                 frontiers[j].y = frontiers[j].y + 1;
                                 frontiers[j].updateSN();
                                 graphModel[lay].graph[frontiers[j].x][(frontiers[j].y-1)] = tempGpValue;
                                 sum -= 1;
-                                /*if(tempMax >= netsNumOfLayers[i]) {*/
+                                if(tempMax >= netsNumOfLayers[i]) {
                                     tempDistanceS = Math.abs(tempSinks[j].x - frontiers[j].x) + Math.abs(tempSinks[j].y - (frontiers[j].y - 1));
                                     if (tempDistanceO > tempDistanceS) {
                                         //保留新的曼哈顿距离及对应的方向
                                         //orientation = 3;
                                         tempDistance[2] = tempDistanceS;
                                     }
-                                /*}*/
+                                }
                             }
 
                         }
@@ -642,19 +659,19 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                 graphModel[lay].graph[frontiers[j].x][(frontiers[j].y+1)] = 1;
                                 frontiers[j].y = frontiers[j].y + 1;
                                 frontiers[j].updateSN();
-                                /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                int tempMax = maximumTest.maxFlow();*/
+                                MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                int tempMax = maximumTest.maxFlow();
                                 frontiers[j].y = frontiers[j].y - 1;
                                 frontiers[j].updateSN();
                                 graphModel[lay].graph[frontiers[j].x][(frontiers[j].y+1)] = tempGpValue;
                                 sum -= 1;
-                                /*if(tempMax >= netsNumOfLayers[i]) {*/
+                                if(tempMax >= netsNumOfLayers[i]) {
                                     tempDistanceN = Math.abs(tempSinks[j].x - frontiers[j].x) + Math.abs(tempSinks[j].y - (frontiers[j].y + 1));
                                     if (tempDistanceO > tempDistanceN) {
                                         //orientation = 4;
                                         tempDistance[3] = tempDistanceN;
                                     }
-                               /* }*/
+                                }
                             }
                         }
                         int temporientation = 0;
@@ -724,11 +741,11 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                         int tempGpValue2 = graphModel[lay].graph[(tempCor2.x - 1)][tempCor2.y];
                                         graphModel[lay].graph[(tempCor1.x - 1)][tempCor1.y] = 1;
                                         graphModel[lay].graph[(tempCor2.x - 1)][tempCor2.y] = 1;
-                                        /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                        int tempMax = maximumTest.maxFlow();*/
+                                        MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                        int tempMax = maximumTest.maxFlow();
                                         graphModel[lay].graph[(tempCor1.x - 1)][tempCor1.y] = tempGpValue1;
                                         graphModel[lay].graph[(tempCor2.x - 1)][tempCor2.y] = tempGpValue2;
-                                        /*if(tempMax >=netsNumOfLayers[i]){*/
+                                        if(tempMax >=netsNumOfLayers[i]){
                                             if(graphModel[lay].graph[(tempCor1.x - 1)][tempCor1.y] == 2){
                                                 proDetour[0] += 2;
                                             }
@@ -747,7 +764,7 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                             if(graphModel[lay].graph[(tempCor2.x - 1)][tempCor2.y] == 5){
                                                 proDetour[0] += 1;
                                             }
-                                        /*}*/
+                                        }
                                     }
                                 }
                                 if((tempCor1.x + 1)>= 0 &&(tempCor1.x + 1)< gridXmax && tempCor1.y >= 0 && tempCor1.y < gridYmax
@@ -759,11 +776,11 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                         int tempGpValue2 = graphModel[lay].graph[(tempCor2.x + 1)][tempCor2.y];
                                         graphModel[lay].graph[(tempCor1.x + 1)][tempCor1.y] = 1;
                                         graphModel[lay].graph[(tempCor2.x + 1)][tempCor2.y] = 1;
-                                        /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                        int tempMax = maximumTest.maxFlow();*/
+                                        MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                        int tempMax = maximumTest.maxFlow();
                                         graphModel[lay].graph[(tempCor1.x + 1)][tempCor1.y] = tempGpValue1;
                                         graphModel[lay].graph[(tempCor2.x + 1)][tempCor2.y] = tempGpValue2;
-                                        /*if(tempMax >=netsNumOfLayers[i]){*/
+                                        if(tempMax >=netsNumOfLayers[i]){
                                             if(graphModel[lay].graph[(tempCor1.x + 1)][tempCor1.y] == 2){
                                                 proDetour[1] += 2;
                                             }
@@ -782,7 +799,7 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                             if(graphModel[lay].graph[(tempCor2.x + 1)][tempCor2.y] == 5){
                                                 proDetour[1] += 1;
                                             }
-                                        /*}*/
+                                        }
                                     }
                                 }
                                 if(tempCor1.x>= 0 && tempCor1.x < gridXmax && (tempCor1.y -1) >= 0 && (tempCor1.y -1) < gridYmax
@@ -792,11 +809,11 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                         int tempGpValue2 = graphModel[lay].graph[tempCor2.x][(tempCor2.y-1)];
                                         graphModel[lay].graph[tempCor1.x][(tempCor1.y-1)] = 1;
                                         graphModel[lay].graph[tempCor2.x][(tempCor2.y-1)] = 1;
-                                        /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                        int tempMax = maximumTest.maxFlow();*/
+                                        MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                        int tempMax = maximumTest.maxFlow();
                                         graphModel[lay].graph[tempCor1.x][(tempCor1.y-1)] = tempGpValue1;
                                         graphModel[lay].graph[tempCor2.x][(tempCor2.y-1)] = tempGpValue2;
-                                        /*if(tempMax >=netsNumOfLayers[i]){*/
+                                        if(tempMax >=netsNumOfLayers[i]){
                                             if(graphModel[lay].graph[tempCor1.x][(tempCor1.y-1)] == 2){
                                                 proDetour[2] += 2;
                                             }
@@ -815,7 +832,7 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                             if(graphModel[lay].graph[tempCor2.x][(tempCor2.y-1)] == 5){
                                                 proDetour[2] += 1;
                                             }
-                                        /*}*/
+                                        }
 
                                     }
 
@@ -827,11 +844,11 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                         int tempGpValue2 = graphModel[lay].graph[tempCor2.x][(tempCor2.y+1)];
                                         graphModel[lay].graph[tempCor1.x][(tempCor1.y+1)] = 1;
                                         graphModel[lay].graph[tempCor2.x][(tempCor2.y+1)] = 1;
-                                        /*MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
-                                        int tempMax = maximumTest.maxFlow();*/
+                                        MaximumFlow maximumTest = new MaximumFlow(gridXmax,gridYmax,sum,graphModel[lay].graph,frontiers,tempSinks);//计算最大流，将每组nets分配到一层layer
+                                        int tempMax = maximumTest.maxFlow();
                                         graphModel[lay].graph[tempCor1.x][(tempCor1.y+1)] = tempGpValue1;
                                         graphModel[lay].graph[tempCor2.x][(tempCor2.y+1)] = tempGpValue2;
-                                        /*if(tempMax >=netsNumOfLayers[i]){*/
+                                        if(tempMax >=netsNumOfLayers[i]){
                                             if(graphModel[lay].graph[tempCor1.x][(tempCor1.y+1)] == 2){
                                                 proDetour[3] += 2;
                                             }
@@ -850,7 +867,7 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
                                             if(graphModel[lay].graph[tempCor2.x][(tempCor2.y+1)] == 5){
                                                 proDetour[3] += 1;
                                             }
-                                        /*}*/
+                                        }
                                     }
 
                                 }
@@ -978,8 +995,8 @@ path[3] = new NetPath(maxDistance,maxDistance,0);*/
             //path[i].routingPath.add(2,sources[i]);测试add功能
             path[i].printRoutingPath();
         }
-        System.out.println(lengthDiff);
-        System.out.println(totalLength);
+        System.out.println("Length difference"+lengthDiff);
+        System.out.println("总线长"+ totalLength);
         //测试clone是否生效了
         /*syNetPairs[0].routingPath.add(sources[0]);
         path[0].routingPath = (ArrayList<Coordinate>)syNetPairs[0].routingPath.clone();
